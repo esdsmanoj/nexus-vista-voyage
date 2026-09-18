@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as EcosystemRouteImport } from './routes/ecosystem'
+import { Route as MapRouteImport } from './routes/map'
+import { Route as CompanyCompanyIdRouteImport } from './routes/company.$companyId'
+import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
+import { Route as CompanyCompanyIdCategoryCategoryIdRouteImport } from './routes/company.$companyId.category.$categoryId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EcosystemRoute = EcosystemRouteImport.update({
+  id: '/ecosystem',
+  path: '/ecosystem',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyCompanyIdRoute = CompanyCompanyIdRouteImport.update({
+  id: '/company/$companyId',
+  path: '/company/$companyId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductProductIdRoute = ProductProductIdRouteImport.update({
+  id: '/product/$productId',
+  path: '/product/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyCompanyIdCategoryCategoryIdRoute =
+  CompanyCompanyIdCategoryCategoryIdRouteImport.update({
+    id: '/category/$categoryId',
+    path: '/category/$categoryId',
+    getParentRoute: () => CompanyCompanyIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ecosystem': typeof EcosystemRoute
+  '/map': typeof MapRoute
+  '/company/$companyId': typeof CompanyCompanyIdRouteWithChildren
+  '/product/$productId': typeof ProductProductIdRoute
+  '/company/$companyId/category/$categoryId': typeof CompanyCompanyIdCategoryCategoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ecosystem': typeof EcosystemRoute
+  '/map': typeof MapRoute
+  '/company/$companyId': typeof CompanyCompanyIdRouteWithChildren
+  '/product/$productId': typeof ProductProductIdRoute
+  '/company/$companyId/category/$categoryId': typeof CompanyCompanyIdCategoryCategoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ecosystem': typeof EcosystemRoute
+  '/map': typeof MapRoute
+  '/company/$companyId': typeof CompanyCompanyIdRouteWithChildren
+  '/product/$productId': typeof ProductProductIdRoute
+  '/company/$companyId/category/$categoryId': typeof CompanyCompanyIdCategoryCategoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/ecosystem'
+    | '/map'
+    | '/company/$companyId'
+    | '/product/$productId'
+    | '/company/$companyId/category/$categoryId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/ecosystem'
+    | '/map'
+    | '/company/$companyId'
+    | '/product/$productId'
+    | '/company/$companyId/category/$categoryId'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/ecosystem'
+    | '/map'
+    | '/company/$companyId'
+    | '/product/$productId'
+    | '/company/$companyId/category/$categoryId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  EcosystemRoute: typeof EcosystemRoute
+  MapRoute: typeof MapRoute
+  CompanyCompanyIdRoute: typeof CompanyCompanyIdRouteWithChildren
+  ProductProductIdRoute: typeof ProductProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,70 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ecosystem': {
+      id: '/ecosystem'
+      path: '/ecosystem'
+      fullPath: '/ecosystem'
+      preLoaderRoute: typeof EcosystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company/$companyId': {
+      id: '/company/$companyId'
+      path: '/company/$companyId'
+      fullPath: '/company/$companyId'
+      preLoaderRoute: typeof CompanyCompanyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/$productId': {
+      id: '/product/$productId'
+      path: '/product/$productId'
+      fullPath: '/product/$productId'
+      preLoaderRoute: typeof ProductProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company/$companyId/category/$categoryId': {
+      id: '/company/$companyId/category/$categoryId'
+      path: '/category/$categoryId'
+      fullPath: '/company/$companyId/category/$categoryId'
+      preLoaderRoute: typeof CompanyCompanyIdCategoryCategoryIdRouteImport
+      parentRoute: typeof CompanyCompanyIdRoute
+    }
   }
 }
 
+interface CompanyCompanyIdRouteChildren {
+  CompanyCompanyIdCategoryCategoryIdRoute: typeof CompanyCompanyIdCategoryCategoryIdRoute
+}
+
+const CompanyCompanyIdRouteChildren: CompanyCompanyIdRouteChildren = {
+  CompanyCompanyIdCategoryCategoryIdRoute:
+    CompanyCompanyIdCategoryCategoryIdRoute,
+}
+
+const CompanyCompanyIdRouteWithChildren =
+  CompanyCompanyIdRoute._addFileChildren(CompanyCompanyIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  EcosystemRoute: EcosystemRoute,
+  MapRoute: MapRoute,
+  CompanyCompanyIdRoute: CompanyCompanyIdRouteWithChildren,
+  ProductProductIdRoute: ProductProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
