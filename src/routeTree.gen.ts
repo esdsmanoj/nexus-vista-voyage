@@ -10,33 +10,76 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EcosystemRouteImport } from './routes/ecosystem'
+import { Route as CompanyCompanyIdRouteImport } from './routes/company.$companyId'
+import { Route as CompanyCompanyIdCategoryCategoryIdRouteImport } from './routes/company.$companyId.category.$categoryId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EcosystemRoute = EcosystemRouteImport.update({
+  id: '/ecosystem',
+  path: '/ecosystem',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyCompanyIdRoute = CompanyCompanyIdRouteImport.update({
+  id: '/company/$companyId',
+  path: '/company/$companyId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompanyCompanyIdCategoryCategoryIdRoute =
+  CompanyCompanyIdCategoryCategoryIdRouteImport.update({
+    id: '/category/$categoryId',
+    path: '/category/$categoryId',
+    getParentRoute: () => CompanyCompanyIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ecosystem': typeof EcosystemRoute
+  '/company/$companyId': typeof CompanyCompanyIdRouteWithChildren
+  '/company/$companyId/category/$categoryId': typeof CompanyCompanyIdCategoryCategoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ecosystem': typeof EcosystemRoute
+  '/company/$companyId': typeof CompanyCompanyIdRouteWithChildren
+  '/company/$companyId/category/$categoryId': typeof CompanyCompanyIdCategoryCategoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ecosystem': typeof EcosystemRoute
+  '/company/$companyId': typeof CompanyCompanyIdRouteWithChildren
+  '/company/$companyId/category/$categoryId': typeof CompanyCompanyIdCategoryCategoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/ecosystem'
+    | '/company/$companyId'
+    | '/company/$companyId/category/$categoryId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/ecosystem'
+    | '/company/$companyId'
+    | '/company/$companyId/category/$categoryId'
+  id:
+    | '__root__'
+    | '/'
+    | '/ecosystem'
+    | '/company/$companyId'
+    | '/company/$companyId/category/$categoryId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EcosystemRoute: typeof EcosystemRoute
+  CompanyCompanyIdRoute: typeof CompanyCompanyIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +91,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ecosystem': {
+      id: '/ecosystem'
+      path: '/ecosystem'
+      fullPath: '/ecosystem'
+      preLoaderRoute: typeof EcosystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company/$companyId': {
+      id: '/company/$companyId'
+      path: '/company/$companyId'
+      fullPath: '/company/$companyId'
+      preLoaderRoute: typeof CompanyCompanyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/company/$companyId/category/$categoryId': {
+      id: '/company/$companyId/category/$categoryId'
+      path: '/category/$categoryId'
+      fullPath: '/company/$companyId/category/$categoryId'
+      preLoaderRoute: typeof CompanyCompanyIdCategoryCategoryIdRouteImport
+      parentRoute: typeof CompanyCompanyIdRoute
+    }
   }
 }
 
+interface CompanyCompanyIdRouteChildren {
+  CompanyCompanyIdCategoryCategoryIdRoute: typeof CompanyCompanyIdCategoryCategoryIdRoute
+}
+
+const CompanyCompanyIdRouteChildren: CompanyCompanyIdRouteChildren = {
+  CompanyCompanyIdCategoryCategoryIdRoute:
+    CompanyCompanyIdCategoryCategoryIdRoute,
+}
+
+const CompanyCompanyIdRouteWithChildren =
+  CompanyCompanyIdRoute._addFileChildren(CompanyCompanyIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EcosystemRoute: EcosystemRoute,
+  CompanyCompanyIdRoute: CompanyCompanyIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
