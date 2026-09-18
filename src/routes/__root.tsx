@@ -10,6 +10,9 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import { EcosystemProvider } from "../lib/ecosystem-store";
+import { KioskProvider } from "../lib/kiosk";
+import { Shell } from "../components/Shell";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -128,8 +131,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <EcosystemProvider>
+        <KioskProvider>
+          <Shell>
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </Shell>
+        </KioskProvider>
+      </EcosystemProvider>
     </QueryClientProvider>
   );
 }
